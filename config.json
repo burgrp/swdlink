@@ -1,0 +1,10 @@
+{
+    "mcu": {
+        "module": "./swdlink.js",
+        "elf": "/home/paul/git/lcvent/fw/build/build.elf",
+        "tcl": [
+            "interface/cmsis-dap.cfg",
+            "target/at91samdXX.cfg"
+        ]
+    }
+}
