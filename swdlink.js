@@ -127,7 +127,7 @@ module.exports = async config => {
 
         socket.on("data", chunk => {
 
-            buffer = buffer + chunk.toString().replace("\r", "");
+            buffer = buffer + chunk.toString().replace(/\r/g, "");
 
             let reset = buffer.indexOf("\u0000");
 
@@ -241,6 +241,18 @@ module.exports = async config => {
             return parseSingleValue(await command(`mdb ${resolveAddress(address)}`, timeoutMs));
         },
 
+        async read(address, length, timeoutMs) {
+            let result = await command(`mdb ${resolveAddress(address)} ${length}`);
+            return Buffer.from(
+                result
+                    .split("\n")
+                    .map(l => l.trim().match(/^0x[0-9a-z]+: (?<result>[0-9a-z ]+)[^\w]*$/))
+                    .filter(l => l)
+                    .map(m => m.groups.result)
+                    .join("")
+                    .replace(/ /g, ""), "hex");
+        },
+
         async write32(address, value, timeoutMs) {
             await command(`mww ${resolveAddress(address)} ${value}`, timeoutMs);
         },
@@ -258,7 +270,7 @@ module.exports = async config => {
             await command(`load_image ${config.elf}`, timeoutMs);
             await command("resume", timeoutMs);
         },
-        
+
         async reset(timeoutMs) {
             await command("reset", timeoutMs);
         }
