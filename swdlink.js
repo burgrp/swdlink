@@ -109,7 +109,7 @@ module.exports = async config => {
     let buffer = "";
 
     function checkWaiting() {
-        if (!pending && !socket.pending) {
+        if (!pending && socket && !socket.pending) {
             pending = waiting.shift();
             if (pending) {
                 socket.write(pending.command + "\n");
