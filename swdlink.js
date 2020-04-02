@@ -242,7 +242,7 @@ module.exports = async config => {
         },
 
         async read(address, length, timeoutMs) {
-            let result = await command(`mdb ${resolveAddress(address)} ${length}`);
+            let result = await command(`mdb ${resolveAddress(address)} ${length}`, timeoutMs);
             return Buffer.from(
                 result
                     .split("\n")
